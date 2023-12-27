@@ -1,28 +1,34 @@
 //Css
 import { Todo } from '../../App';
-import classes from './card.module.css';
+import './card.css';
 
-//Interfaces
+//Interfaces / Types
 type CardProps = {
   todo: Todo;
   completeTodo: (id: number) => void;
+  deleteTodo: (id: number) => void;
 };
 
 //Function
-export default function Card({ todo, completeTodo }: CardProps) {
+export default function Card({ todo, completeTodo, deleteTodo }: CardProps) {
   function handleCompleteTodo() {
     completeTodo(todo.id);
   }
+  function handleDeleteTodo() {
+    deleteTodo(todo.id);
+  }
 
   return (
-    //defeito ao passar uma classe em css module com if ternário
-    <div className={`${classes.container_Card} ${classes.done}`}>
+    //ao passar mais de uma classe em que precisa de if ternário é necessário usar template strings
+    <div className={`container_Card  card ${todo.completed ? 'done' : ''}`}>
       {/* <h2>Fazer café</h2> */}
       <h1>{todo.title}</h1>
 
-      <div className={classes.card_buttons}>
-        <button onClick={handleCompleteTodo}>Completar</button>
-        <button>Deletar</button>
+      <div className='card_buttons'>
+        <button onClick={handleCompleteTodo}>
+          {todo.completed ? 'Retomar' : 'Completar'}
+        </button>
+        <button onClick={handleDeleteTodo}>Deletar</button>
       </div>
     </div>
   );

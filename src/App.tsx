@@ -1,5 +1,5 @@
 //Libs
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 
 //Components
 import Card from './components/card/card';
@@ -14,25 +14,46 @@ export type Todo = {
 };
 
 function App() {
+  //useState
   const [todoInput, setTodoInput] = useState('');
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(()=>{
+    const storedTodos = localStorage.getItem('@codersList:todos');
+
+    if(storedTodos){
+      return JSON.parse(storedTodos);
+    }
+    return [];
+  });
+
+  //useEffect
+  useEffect(()=> {
+localStorage.setItem('@codersList:todos', JSON.stringify(todos))
+  },[todos])
 
   function addTodo() {
+    //handlers
     setTodos((previousTodos) => [
       ...todos,
       { id: Math.random(), title: todoInput, completed: false },
     ]);
     setTodoInput('');
   }
+  function completeTodo(id: number) {
+    setTodos((previousTodos) =>
+      previousTodos.map((todo) =>
+        todo.id !== id ? todo : { ...todo, completed: !todo.completed }
+      )
+    );
+  }
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setTodoInput(e.target.value);
   }
 
-  function completeTodo(id: number) {
-    setTodos((previousTodos) => previousTodos.map((todo) => todo.id !== id ? todo : {...todo, completed: !todo.completed}));
-    
+  function deleteTodo(id: number) {
+    setTodos((previousTodos) => previousTodos.filter((todo) => todo.id !== id));
   }
 
+  //return
   return (
     <div className={classes.container_App}>
       <div className={classes.add_todo}>
@@ -43,7 +64,12 @@ function App() {
         />
         <button onClick={addTodo}>Adicionar</button>
         {todos.map((todo) => (
-          <Card key={todo.id} todo={todo} completeTodo={completeTodo}/>
+          <Card
+            key={todo.id}
+            todo={todo}
+            completeTodo={completeTodo}
+            deleteTodo={deleteTodo}
+          />
         ))}
       </div>
     </div>
