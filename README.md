@@ -20,4 +20,9 @@ Conceitos aplicados:
 
 ## by Carlos Levi.
 
+- Gostou? quer fazer ou ver quem fez?
+- Link: https://www.youtube.com/watch?v=m0nmYTAFf9Y
+
 ### Replicado para estudos by Christiano Quintela.
+
+
